@@ -7,19 +7,27 @@ import { GithubContext } from '../context/context';
 const Search = () => {
   const [user, setUser] = React.useState('');
   //get global things
-  console.log(React.useContext(GithubContext));
   const {
     reset,
     requests: { limit, remaining },
+    error,
+    searchGithubUser,
+    loading,
   } = React.useContext(GithubContext);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (user) {
+      searchGithubUser(user);
     }
   };
   return (
     <section className='section'>
       <Wrapper className='section-center'>
+        {error.show && (
+          <ErrorWrapper>
+            <p>{error.msg}</p>
+          </ErrorWrapper>
+        )}
         <form onSubmit={handleSubmit}>
           <div className='form-control'>
             <MdSearch />
@@ -31,14 +39,14 @@ const Search = () => {
                 setUser(e.target.value);
               }}
             />
-            <button>search</button>
+            {remaining > 0 && !loading && <button>search</button>}
           </div>
         </form>
         <div className='info-wrap'>
           <h3>
             requests: {remaining} / {limit}
           </h3>
-          <h4>reset in {reset} minutes</h4>
+          {!(remaining === limit) && <h4>will reset in {reset} minutes</h4>}
         </div>
       </Wrapper>
     </section>
@@ -56,6 +64,10 @@ const Wrapper = styled.div`
   .info-wrap {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    h3 {
+      margin-bottom: 0.5rem;
+    }
     @media (min-width: 768px) {
       padding-left: 0.5rem;
     }
@@ -108,7 +120,7 @@ const Wrapper = styled.div`
       button,
       input,
       svg {
-        font-size: 0.85rem;
+        font-size: 1rem;
       }
     }
   }

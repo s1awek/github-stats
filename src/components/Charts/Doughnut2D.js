@@ -1,3 +1,5 @@
+/** @format */
+
 // STEP 1 - Include Dependencies
 // Include react
 import React from 'react';
@@ -29,7 +31,7 @@ const Doughnut2D = ({ data }) => {
         caption: 'Stars Per Language',
         theme: 'fusion',
         decimals: 0,
-        doughnutRadius: '45%',
+        pieRadius: '45%',
         showPercentValues: 0,
       },
       // Chart Data

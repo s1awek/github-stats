@@ -18,25 +18,60 @@ const GithubProvider = ({ children }) => {
   const [reset, setReset] = useState(0);
   const [loading, setLoading] = useState(false);
   // error
+  const [error, setError] = useState({ show: false, msg: '' });
+  const searchGithubUser = async (user) => {
+    toggleError();
+    setLoading(true);
+    const response = await axios(`${rootUrl}/users/${user}`).catch((err) => {
+      console.log(err);
+    });
+    //console.log(response);
+    if (response) {
+      setGithubUser(response.data);
+      const { login, followers_url } = response.data;
+      await Promise.allSettled([axios(`${rootUrl}/users/${login}/repos?per_page=100`), axios(`${followers_url}?per_page=100`)])
+        .then((response) => {
+          const [repos, followers] = response;
+          const status = 'fulfilled';
+          if (repos.status === status) {
+            setRepos(repos.value.data);
+          }
+          if (followers.status === status) {
+            setFollowers(followers.value.data);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      toggleError(true, 'user does not exist');
+    }
+    setLoading(false);
+  };
   //check rate
   const checkRequests = () => {
     axios(`${rootUrl}/rate_limit`)
-      .then((data) => {
-        const reset = data.data.rate.reset;
-        const limit = data.data.rate.limit;
-        const remaining = data.data.rate.remaining;
+      .then(({ data }) => {
+        const {
+          rate: { reset, limit, remaining },
+        } = data;
         const now = Math.round(new Date().getTime() / 1000);
         const minutesToReset = Math.ceil((reset - now) / 60);
         setReset(minutesToReset);
         setRequests({ limit, remaining });
-        console.log(data);
+        if (remaining === 0) {
+          toggleError(true, `sorry, you have exceeded your hourly rate limit! It is based on your IP address.`);
+        }
       })
       .catch((err) => {
         console.log(err);
       });
   };
-  useEffect(checkRequests, []);
-  return <GithubContext.Provider value={{ githubUser, repos, followers, reset, requests }}>{children}</GithubContext.Provider>;
+  function toggleError(show = false, msg = '') {
+    setError({ show, msg });
+  }
+  useEffect(checkRequests, [githubUser, error]);
+  return <GithubContext.Provider value={{ githubUser, repos, followers, reset, requests, error, loading, searchGithubUser }}>{children}</GithubContext.Provider>;
 };
 
 export { GithubProvider, GithubContext };
