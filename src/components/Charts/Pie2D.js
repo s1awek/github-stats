@@ -30,17 +30,10 @@ const ExampleChart = ({ data }) => {
     dataSource: {
       // Chart Configuration
       chart: {
-        //Set the chart caption
-        caption: 'Countries With Most Oil Reserves [2017-18]',
-        //Set the chart subcaption
-        subCaption: 'In MMbbl = One Million barrels',
-        //Set the x-axis name
-        xAxisName: 'Country',
-        //Set the y-axis name
-        yAxisName: 'Reserves (MMbbl)',
-        numberSuffix: '',
-        //Set the theme for your chart
+        caption: 'Languages',
         theme: 'fusion',
+        decimals: 0,
+        pieRadius: '45%',
       },
       // Chart Data
       data,

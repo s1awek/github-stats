@@ -1,9 +1,48 @@
+/** @format */
+
 import React from 'react';
 import styled from 'styled-components';
 import { MdSearch } from 'react-icons/md';
 import { GithubContext } from '../context/context';
 const Search = () => {
-  return <h2>search component</h2>;
+  const [user, setUser] = React.useState('');
+  //get global things
+  console.log(React.useContext(GithubContext));
+  const {
+    reset,
+    requests: { limit, remaining },
+  } = React.useContext(GithubContext);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (user) {
+    }
+  };
+  return (
+    <section className='section'>
+      <Wrapper className='section-center'>
+        <form onSubmit={handleSubmit}>
+          <div className='form-control'>
+            <MdSearch />
+            <input
+              type='text'
+              placeholder='enter github user'
+              value={user}
+              onChange={(e) => {
+                setUser(e.target.value);
+              }}
+            />
+            <button>search</button>
+          </div>
+        </form>
+        <div className='info-wrap'>
+          <h3>
+            requests: {remaining} / {limit}
+          </h3>
+          <h4>reset in {reset} minutes</h4>
+        </div>
+      </Wrapper>
+    </section>
+  );
 };
 
 const Wrapper = styled.div`
@@ -13,8 +52,12 @@ const Wrapper = styled.div`
   @media (min-width: 768px) {
     grid-template-columns: 1fr max-content;
     align-items: center;
-    h3 {
-      padding: 0 0.5rem;
+  }
+  .info-wrap {
+    display: flex;
+    flex-direction: column;
+    @media (min-width: 768px) {
+      padding-left: 0.5rem;
     }
   }
   .form-control {
@@ -69,7 +112,8 @@ const Wrapper = styled.div`
       }
     }
   }
-  h3 {
+  h3,
+  h4 {
     margin-bottom: 0;
     color: var(--clr-grey-5);
     font-weight: 400;
