@@ -5,7 +5,7 @@ import { GithubContext } from '../context/context';
 import styled from 'styled-components';
 import { MdBusiness, MdLocationOn, MdLink } from 'react-icons/md';
 const Card = () => {
-  const { githubUser, error } = React.useContext(GithubContext);
+  const { githubUser } = React.useContext(GithubContext);
   const { avatar_url, html_url, name, company, blog, bio, location, twitter_username } = githubUser;
 
   return (

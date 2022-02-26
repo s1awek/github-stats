@@ -1,3 +1,5 @@
+/** @format */
+
 import React from 'react';
 import styled from 'styled-components';
 import { GithubContext } from '../context/context';
@@ -15,13 +17,11 @@ const Repos = () => {
 
     return total;
   }, {});
-  //console.log(languages, Object.values(languages));
   const mostUsed = Object.values(languages)
     .sort((a, b) => {
       return b.value - a.value;
     })
     .slice(0, 5);
-  //console.log(mostUsed);
 
   //Most stars per language
   const mostPopular = Object.values(mostUsed)
