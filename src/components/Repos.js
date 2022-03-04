@@ -17,6 +17,7 @@ const Repos = () => {
 
     return total;
   }, {});
+  console.log(repos);
   const mostUsed = Object.values(languages)
     .sort((a, b) => {
       return b.value - a.value;
